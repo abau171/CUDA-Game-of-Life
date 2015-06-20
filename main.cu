@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "options.h"
 #include "board.h"
 #include "generation.h"
 
@@ -11,11 +12,13 @@ static void drawGlider(Board board) {
 	setCellState(board, 0, 2, ALIVE);
 }
 
-int main() {
+int main(int argc, char** argv) {
+	int numGenerations;
+	getOptions(argc, argv, &numGenerations);
 	Board board = newBoard();
 	drawGlider(board);
 	printBoard(board);
-	nextNGens(board, 32);
-	printBoard(board);
+	nextNGens(board, numGenerations);
+	printGeneration(board, numGenerations);
 	freeBoard(board);
 }
