@@ -4,14 +4,14 @@
 #include "board.h"
 #include "device_board.h"
 
-static int getNumLivingNeighbors(Board board, int x, int y) {
+static __device__ int d_getNumLivingNeighbors(Board board, int x, int y) {
 	int numLivingNeighbors = 0;
 	for (int dy = -1; dy <= 1; dy++) {
 		for (int dx = -1; dx <= 1; dx++) {
 			if (dx == 0 && dy == 0) {
 				continue;
 			}
-			if (getCellState(board, x + dx, y + dy) == ALIVE) {
+			if (d_getCellState(board, x + dx, y + dy) == ALIVE) {
 				numLivingNeighbors++;
 			}
 		}
@@ -19,11 +19,9 @@ static int getNumLivingNeighbors(Board board, int x, int y) {
 	return numLivingNeighbors;
 }
 
-/*static CellState getNextState(Board board, int x, int y) {
-	int numLivingNeighbors = getNumLivingNeighbors(board, x, y);
-	CellState prevState = getCellState(board, x, y);
+static __device__ CellState getNextState(bool cellAlive, int numLivingNeighbors) {
 	CellState nextState = DEAD;
-	if (prevState == ALIVE) {
+	if (cellAlive) {
 		if (numLivingNeighbors >= 2 && numLivingNeighbors <= 3) {
 			nextState = ALIVE;
 		}
@@ -31,37 +29,20 @@ static int getNumLivingNeighbors(Board board, int x, int y) {
 		nextState = ALIVE;
 	}
 	return nextState;
-}*/
-
-/*static void nextGen(Board prevBoard, Board nextBoard) {
-	for (int y = 0; y < BOARD_DIM; y++) {
-		for (int x = 0; x < BOARD_DIM; x++) {
-			setCellState(nextBoard, x, y, getNextState(prevBoard, x, y));
-		}
-	}
-}*/
-
-__global__ void d_nextNGens(Board d_board, int numGens) {
-	for (int i = 0; i < numGens; i++) {
-		//nextGen(*curBoard_p, *nextBoard_p);
-		//Board* tmp = curBoard_p;
-		//curBoard_p = nextBoard_p;
-		//nextBoard_p = tmp;
-	}
 }
 
-__global__ void d_invert(Board d_board) {
-	d_board[BOARD_DIM * threadIdx.y + threadIdx.x] = 1 - d_board[BOARD_DIM * threadIdx.y + threadIdx.x];
+__global__ void d_nextNGens(Board d_board1, Board d_board2, int numGens) {
+	bool cellAlive = (d_getCellState(d_board1, threadIdx.x, threadIdx.y) == ALIVE);
+	int numLivingNeighbors = d_getNumLivingNeighbors(d_board1, threadIdx.x, threadIdx.y);
+	CellState nextState = getNextState(cellAlive, numLivingNeighbors);
+	d_setCellState(d_board2, threadIdx.x, threadIdx.y, nextState);
 }
 
 void nextNGens(Board origBoard, int numGens) {
-	Board d_board = newDeviceBoard();
-	copyBoardToDevice(origBoard, d_board);
-	dim3 invertThreadDim(BOARD_DIM, BOARD_DIM);
-	d_invert<<<1, invertThreadDim>>>(d_board);
-	copyDeviceToBoard(d_board, origBoard);
-
-	//d_nextNGens<<<1, BOAD_SIZE>>>(board, numGens);
-
-	// copy device board back
+	Board d_board1 = newDeviceBoard();
+	Board d_board2 = newDeviceBoard();
+	copyBoardToDevice(origBoard, d_board1);
+	dim3 threadDim(BOARD_DIM, BOARD_DIM);
+	d_nextNGens<<<1, threadDim>>>(d_board1, d_board2, numGens);
+	copyDeviceToBoard(d_board2, origBoard);
 }
