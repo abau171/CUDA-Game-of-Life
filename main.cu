@@ -3,6 +3,7 @@
 #include "options.h"
 #include "board.h"
 #include "generation.h"
+#include "board_printer.h"
 
 static void drawGlider(Board board) {
 	setCellState(board, 0, 0, ALIVE);

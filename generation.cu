@@ -2,11 +2,7 @@
 
 #include "generation.h"
 #include "board.h"
-
-void printGeneration(Board board, int generation) {
-	printf("\nGeneration %d\n", generation);
-	printBoard(board);
-}
+#include "device_board.h"
 
 static int getNumLivingNeighbors(Board board, int x, int y) {
 	int numLivingNeighbors = 0;
