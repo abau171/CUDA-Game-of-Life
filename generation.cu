@@ -50,9 +50,16 @@ __global__ void d_nextNGens(Board d_board, int numGens) {
 	}
 }
 
-void nextNGens(Board origBoard, int numGens) {
+__global__ void d_invert(Board d_board) {
+	d_board[BOARD_DIM * threadIdx.y + threadIdx.x] = 1 - d_board[BOARD_DIM * threadIdx.y + threadIdx.x];
+}
 
+void nextNGens(Board origBoard, int numGens) {
 	Board d_board = newDeviceBoard();
+	copyBoardToDevice(origBoard, d_board);
+	dim3 invertThreadDim(BOARD_DIM, BOARD_DIM);
+	d_invert<<<1, invertThreadDim>>>(d_board);
+	copyDeviceToBoard(d_board, origBoard);
 
 	//d_nextNGens<<<1, BOAD_SIZE>>>(board, numGens);
 
