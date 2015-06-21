@@ -12,4 +12,14 @@ typedef enum {ALIVE, DEAD} CellState;
 
 typedef char* Board;
 
+int getBoardDim();
+
+int getBoardSize();
+
+void setBoardDim(int boardDim);
+
+__device__ int d_getBoardDim();
+
+__device__ int d_getBoardSize();
+
 #endif

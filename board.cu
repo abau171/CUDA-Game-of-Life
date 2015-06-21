@@ -3,8 +3,8 @@
 #include "board.h"
 
 Board newBoard() {
-	Board board = (Board) malloc(BOARD_SIZE * sizeof(char));
-	for (int i = 0; i < BOARD_SIZE; i++) {
+	Board board = (Board) malloc(getBoardSize() * sizeof(char));
+	for (int i = 0; i < getBoardSize(); i++) {
 		board[i] = 0;
 	}
 	return board;
@@ -14,12 +14,12 @@ void freeBoard(Board board) {
 	free(board);
 }
 
-#define wrapCoord(c) ((c + BOARD_DIM) % BOARD_DIM)
+#define wrapCoord(c) ((c + getBoardDim()) % getBoardDim())
 
 CellState getCellState(Board board, int x, int y) {
-	return (board[BOARD_DIM * wrapCoord(y) + wrapCoord(x)] == 1) ? ALIVE : DEAD;
+	return (board[getBoardDim() * wrapCoord(y) + wrapCoord(x)] == 1) ? ALIVE : DEAD;
 }
 
 void setCellState(Board board, int x, int y, CellState state) {
-	board[BOARD_DIM * wrapCoord(y) + wrapCoord(x)] = (state == ALIVE) ? 1 : 0;
+	board[getBoardDim() * wrapCoord(y) + wrapCoord(x)] = (state == ALIVE) ? 1 : 0;
 }

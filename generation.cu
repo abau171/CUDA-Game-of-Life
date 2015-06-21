@@ -66,7 +66,7 @@ void nextNGens(Board origBoard, int numGens) {
 	Board d_board1 = newDeviceBoard();
 	Board d_board2 = newDeviceBoard();
 	copyBoardToDevice(origBoard, d_board1);
-	dim3 threadDim(BOARD_DIM, BOARD_DIM);
+	dim3 threadDim(getBoardDim(), getBoardDim());
 	d_nextNGens<<<1, threadDim>>>(d_board1, d_board2, numGens);
 	Board* d_finalBoard_p = pickFinalBoard(&d_board1, &d_board2, numGens);
 	copyDeviceToBoard(*d_finalBoard_p, origBoard);

@@ -5,7 +5,7 @@
 
 static void printBoardHorizontalBorder() {
 	printf("%c", CORNER_BORDER);
-	for (int col = 0; col < 2 * BOARD_DIM + 1; col++) {
+	for (int col = 0; col < 2 * getBoardDim() + 1; col++) {
 		printf("%c", HORIZONTAL_BORDER);
 	}
 	printf("%c\n", CORNER_BORDER);
@@ -13,9 +13,9 @@ static void printBoardHorizontalBorder() {
 
 void printBoard(Board board) {
 	printBoardHorizontalBorder();
-	for (int y = 0; y < BOARD_DIM; y++) {
+	for (int y = 0; y < getBoardDim(); y++) {
 		printf("%c", VERTICAL_BORDER);
-		for (int x = 0; x < BOARD_DIM; x++) {
+		for (int x = 0; x < getBoardDim(); x++) {
 			printf(" %c", (getCellState(board, x, y) == ALIVE) ? '#' : ' ');
 		}
 		printf(" %c%c\n", VERTICAL_BORDER);

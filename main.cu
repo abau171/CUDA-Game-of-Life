@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "common_board.h"
 #include "options.h"
 #include "board.h"
 #include "generation.h"
@@ -15,7 +16,9 @@ static void drawGlider(Board board) {
 
 int main(int argc, char** argv) {
 	int numGenerations;
-	getOptions(argc, argv, &numGenerations);
+	int boardDim;
+	getOptions(argc, argv, &numGenerations, &boardDim);
+	setBoardDim(boardDim);
 	Board board = newBoard();
 	drawGlider(board);
 	printBoard(board);
