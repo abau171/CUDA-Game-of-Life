@@ -16,6 +16,14 @@ Board newBoard();
 
 void freeBoard(Board board);
 
+Board newDeviceBoard();
+
+void freeDeviceBoard(Board d_board);
+
+void copyBoardToDevice(Board board, Board d_board);
+
+void copyDeviceToBoard(Board d_board, Board board);
+
 CellState getCellState(Board board, int x, int y);
 
 void setCellState(Board board, int x, int y, CellState state);

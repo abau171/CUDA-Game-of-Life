@@ -23,7 +23,7 @@ static int getNumLivingNeighbors(Board board, int x, int y) {
 	return numLivingNeighbors;
 }
 
-static CellState getNextState(Board board, int x, int y) {
+/*static CellState getNextState(Board board, int x, int y) {
 	int numLivingNeighbors = getNumLivingNeighbors(board, x, y);
 	CellState prevState = getCellState(board, x, y);
 	CellState nextState = DEAD;
@@ -35,37 +35,30 @@ static CellState getNextState(Board board, int x, int y) {
 		nextState = ALIVE;
 	}
 	return nextState;
-}
+}*/
 
-static void nextGen(Board prevBoard, Board nextBoard) {
+/*static void nextGen(Board prevBoard, Board nextBoard) {
 	for (int y = 0; y < BOARD_DIM; y++) {
 		for (int x = 0; x < BOARD_DIM; x++) {
 			setCellState(nextBoard, x, y, getNextState(prevBoard, x, y));
 		}
 	}
+}*/
+
+__global__ void d_nextNGens(Board d_board, int numGens) {
+	for (int i = 0; i < numGens; i++) {
+		//nextGen(*curBoard_p, *nextBoard_p);
+		//Board* tmp = curBoard_p;
+		//curBoard_p = nextBoard_p;
+		//nextBoard_p = tmp;
+	}
 }
 
 void nextNGens(Board origBoard, int numGens) {
 
-	Board bufferBoard = newBoard();
+	Board d_board = newDeviceBoard();
 
-	nextGen(origBoard, bufferBoard);
+	//d_nextNGens<<<1, BOAD_SIZE>>>(board, numGens);
 
-	Board* curBoard_p = &origBoard;
-	Board* nextBoard_p = &bufferBoard;
-
-	for (int i = 0; i < numGens; i++) {
-		nextGen(*curBoard_p, *nextBoard_p);
-		Board* tmp = curBoard_p;
-		curBoard_p = nextBoard_p;
-		nextBoard_p = tmp;
-	}
-
-	if (*curBoard_p != origBoard) {
-		for (int i = 0; i < BOARD_SIZE; i++) {
-			origBoard[i] = (*curBoard_p)[i];
-		}
-	}
-
-	freeBoard(bufferBoard);
+	// copy device board back
 }

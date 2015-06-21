@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	Board board = newBoard();
 	drawGlider(board);
 	printBoard(board);
-	nextNGens(board, numGenerations);
-	printGeneration(board, numGenerations);
+	//nextNGens(board, numGenerations);
+	//printGeneration(board, numGenerations);
 	freeBoard(board);
 }
