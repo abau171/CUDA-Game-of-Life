@@ -2,15 +2,16 @@ NAME = gameoflife
 CC = gcc
 NVCC = nvcc
 
-SRC = $(wildcard src/*.cu)
-OBJ = $(patsubst src/%.cu, obj/%.o, $(SRC))
+SRC_C = $(wildcard src/*.c)
+SRC_CU = $(wildcard src/*.cu)
+OBJ = $(patsubst src/%.c, obj/%.o, $(SRC_C)) $(patsubst src/%.cu, obj/%.o, $(SRC_CU))
 
 .PHONY: all clean objects
 
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	nvcc $(OBJ) -o $(NAME)
+	$(NVCC) $(OBJ) -o $(NAME)
 
 clean :
 	rm -f $(NAME)
