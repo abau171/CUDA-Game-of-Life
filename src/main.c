@@ -1,23 +1,39 @@
 #include <stdio.h>
-#include <time.h>
-#include <unistd.h>
 
 #include <gameoflife.h>
+#include <gpu_gameoflife.h>
 
-int main(int argc, char* argv[]) {
-    //set_cell(2, 1);
-    //set_cell(3, 2);
-    //set_cell(1, 3);
-    //set_cell(2, 3);
-    //set_cell(3, 3);
+void run_cpu(void) {
     randomize_board();
     int gen = 0;
-    while (1) {
+    for (int i = 0; i < 10; i++) {
         printf("GENERATION %d\n", gen);
         print_board();
-        usleep(100 * 1000);
-        next_gen();
-        gen++;
+        for (int j = 0; j < 100000; j++) {
+            next_gen();
+        }
+        gen += 100000;
     }
 }
+
+void run_gpu(void) {
+    gpu_randomize_board();
+    int gen = 0;
+    for (int i = 0; i < 10; i++) {
+        printf("GENERATION %d\n", gen);
+        gpu_print_board();
+        gpu_next_n_gens(100000);
+        gen += 100000;
+    }
+}
+
+int main(int argc, char* argv[]) {
+    run_gpu();
+}
+
+    /*gpu_set_cell(2, 1);
+    gpu_set_cell(3, 2);
+    gpu_set_cell(1, 3);
+    gpu_set_cell(2, 3);
+    gpu_set_cell(3, 3);*/
 

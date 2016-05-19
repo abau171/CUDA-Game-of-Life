@@ -3,6 +3,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <gameoflife.h>
+
 #define WIDTH 32
 #define HEIGHT 18
 
@@ -57,7 +59,7 @@ void set_cell(int x, int y) {
 }
 
 void randomize_board(void) {
-    srand(time(NULL));
+    srand(172);
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
             if (rand() % 2 == 0) {
